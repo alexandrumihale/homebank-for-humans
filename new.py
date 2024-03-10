@@ -1,4 +1,6 @@
 import csv
+import os
+import openpyxl
 
 file = "ing.csv"
 rows = []
@@ -23,7 +25,7 @@ excludingline = "Titular cont:"
 
 headers = ["Data", "Tip Tranzactie", "Debit", "Credit", "Ordonator", "Terminal"]
 
-# Iterate through the list to merge with the previous list if the first element is empty
+
 del rows[:2]
 del rows[-10:]
 
@@ -59,5 +61,18 @@ with open("output.csv", "w+", newline="\n") as output:
             }
             output.writerow(details)
 
+transactions = []
+
+wb = openpyxl.load_workbook('readable.xlsx')
+ws = wb['Transactions']
 
 
+with open('output.csv', "r") as outputfile:
+    output = csv.reader(outputfile)
+    next(output)
+    for line in output: 
+        ws.append(line)
+        
+        
+wb.save('readable.xlsx')
+wb.close()
